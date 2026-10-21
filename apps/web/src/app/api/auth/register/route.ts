@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/prisma-edge-edge'
+﻿import { prisma } from '@/lib/prisma-edge'
 import { createLocalSession, LOCAL_AUTH_COOKIE, isLocalAuth } from '@/lib/local-auth'
 import { hash } from 'bcryptjs'
 import { NextResponse } from 'next/server'

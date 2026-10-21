@@ -1,5 +1,5 @@
 ﻿import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma-edge-edge'
+import { prisma } from '@/lib/prisma-edge'
 import { NextResponse } from 'next/server'
 import { encrypt } from '@/lib/encryption'
 import { generateKeyHash } from '@/lib/encryption'

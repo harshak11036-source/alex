@@ -1,5 +1,5 @@
 ﻿import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma-edge-edge'
+import { prisma } from '@/lib/prisma-edge'
 import { NextResponse } from 'next/server'
 import { hybridSearch } from '@/lib/rag/vector-search'
 import { getUserChatProvider } from '@/lib/rag/generation'

@@ -278,7 +278,7 @@ export async function getUserVoiceConfig(userId: string): Promise<{
   defaultVoice?: string
   defaultLanguage?: string
 } | null> {
-  const { prisma } = await import('@/lib/prisma-edge-edge')
+  const { prisma } = await import('@/lib/prisma-edge')
   const { decrypt } = await import('@/lib/encryption')
 
   const voiceCreds = await prisma.aICredential.findFirst({

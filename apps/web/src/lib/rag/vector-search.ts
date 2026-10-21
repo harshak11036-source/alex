@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/prisma-edge-edge'
+﻿import { prisma } from '@/lib/prisma-edge'
 import { getUserEmbeddingProvider } from '@/lib/ai/embeddings'
 import { Prisma } from '@prisma/client'
 

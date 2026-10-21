@@ -1,5 +1,5 @@
 ﻿import { cookies } from 'next/headers'
-import { prisma } from '@/lib/prisma-edge-edge'
+import { prisma } from '@/lib/prisma-edge'
 import { getLocalUserId } from '@/lib/local-auth'
 
 function isLocalAuth() {

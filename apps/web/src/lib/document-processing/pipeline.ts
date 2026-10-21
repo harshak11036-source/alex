@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/prisma-edge-edge'
+﻿import { prisma } from '@/lib/prisma-edge'
 import { DocumentStatus, DocumentType } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { extractContent } from '@/lib/document-processing/extractors'

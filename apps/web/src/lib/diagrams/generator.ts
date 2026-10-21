@@ -1,4 +1,4 @@
-﻿import { prisma } from '@/lib/prisma-edge-edge'
+﻿import { prisma } from '@/lib/prisma-edge'
 import { Diagram } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 

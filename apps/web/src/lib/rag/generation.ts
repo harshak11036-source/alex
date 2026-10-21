@@ -1,5 +1,5 @@
 ﻿import { AICredential, AIProviderType as PrismaAIProviderType } from '@prisma/client'
-import { prisma } from '@/lib/prisma-edge-edge'
+import { prisma } from '@/lib/prisma-edge'
 import { decrypt } from '@/lib/encryption'
 import { SearchResult } from './vector-search'
 import OpenAI from 'openai'
