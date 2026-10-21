@@ -3,47 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "functions",
-    "packages/*"
+    "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:web\" \"npm run dev:functions\"",
+    "dev": "npm run dev:web",
     "dev:web": "npm run dev --workspace=apps/web",
-    "dev:functions": "npm run serve --workspace=functions",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build:web",
     "build:web": "npm run build --workspace=apps/web",
-    "build:functions": "npm run build --workspace=functions",
     "start": "npm run start --workspace=apps/web",
-    "lint": "npm run lint --workspaces --if-present",
-    "lint:fix": "npm run lint:fix --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
-    "test:watch": "npm run test:watch --workspaces --if-present",
-    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "lint": "npm run lint --workspace=apps/web",
+    "lint:fix": "npm run lint:fix --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspace=apps/web",
+    "test": "npm run test --workspace=apps/web",
+    "test:watch": "npm run test:watch --workspace=apps/web",
+    "test:coverage": "npm run test:coverage --workspace=apps/web",
     "db:generate": "npm run db:generate --workspace=apps/web",
     "db:push": "npm run db:push --workspace=apps/web",
     "db:migrate": "npm run db:migrate --workspace=apps/web",
     "db:studio": "npm run db:studio --workspace=apps/web",
     "db:seed": "npm run db:seed --workspace=apps/web",
     "db:reset": "npm run db:reset --workspace=apps/web",
-    "firebase:emulators": "firebase emulators:start",
-    "firebase:deploy": "firebase deploy",
-    "firebase:deploy:hosting": "firebase deploy --only hosting",
-    "firebase:deploy:functions": "firebase deploy --only functions",
-    "firebase:deploy:firestore": "firebase deploy --only firestore:rules,firestore:indexes",
-    "firebase:deploy:storage": "firebase deploy --only storage",
-    "deploy:preview": "npm run build && firebase deploy --only hosting:preview",
-    "deploy:production": "npm run build && firebase deploy",
     "predeploy": "npm run build && npm run lint && npm run typecheck"
   },
   "devDependencies": {
     "concurrently": "^9.0.0",
-    "eslint": "^9",
-    "firebase-tools": "^13.0.0"
+    "eslint": "^9"
   },
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "dependencies": {}
 }

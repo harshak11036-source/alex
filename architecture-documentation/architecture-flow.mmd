@@ -1,0 +1,410 @@
+```mermaid
+flowchart TD
+    %% ===== USER INTERACTION =====
+    User((User))
+    Browser[Browser / Next.js App]
+    
+    %% ===== FRONTEND LAYER =====
+    subgraph FE [Frontend - Next.js 16 (apps/web)]
+        direction TB
+        Pages[Pages & Layouts]
+        Components[UI Components]
+        AuthProvider[AuthProvider Context]
+        TanStackQuery[TanStack Query Cache]
+        Middleware[Next.js Middleware]
+        APIRoutes[API Routes /app-api/api/*]
+        SupabaseClient[Supabase Client SDK]
+        FirebaseClient[Firebase Client SDK]
+    end
+    
+    %% ===== BACKEND LAYER =====
+    subgraph BE [Backend - Firebase Functions Gen 2 (functions/src)]
+        direction TB
+        Index[index.ts - Entry Point & Exports]
+        AuthVerify[Firebase Auth Verification]
+        
+        subgraph Functions [Callable HTTPS Functions]
+            UserFn[user.ts]
+            DocFn[document.ts]
+            RagFn[rag.ts]
+            AiFn[ai.ts]
+            StudyFn[study.ts]
+            PlannerFn[planner.ts]
+            ResearchFn[research.ts]
+            ProjectFn[project.ts]
+            AttendanceFn[attendance.ts]
+            AssessmentFn[assessment.ts]
+            AssignmentFn[assignment.ts]
+            AchievementFn[achievement.ts]
+        end
+        
+        subgraph Triggers [Background Triggers]
+            OnUserCreate[onUserCreate - Firestore Trigger]
+            OnDocUpload[onDocumentUpload - Storage Trigger]
+            ScheduledCleanup[scheduledCleanup - Daily 02:00 UTC]
+            ScheduledAttendance[scheduledAttendanceAlerts - Daily 08:00 UTC]
+        end
+    end
+    
+    %% ===== DATABASE LAYER =====
+    subgraph DB [Databases]
+        direction TB
+        
+        subgraph Firestore [Firebase Firestore - Real-time]
+            FS_Users[users]
+            FS_Docs[documents]
+            FS_Chunks[documentChunks]
+            FS_Jobs[documentProcessingJobs]
+            FS_Conv[conversations]
+            FS_Msgs[messages]
+            FS_Mem[userMemories]
+            FS_Study[studyMaterials]
+            FS_Flash[flashcardDecks, flashcards, flashcardReviews]
+            FS_Quiz[quizzes, quizAttempts]
+            FS_Mind[mindMaps]
+            FS_Diag[diagrams]
+            FS_Research[researchNotebooks, researchSources, researchNotes]
+            FS_Proj[projects, projectMembers, projectTasks, projectMilestones, projectDiscussions]
+            FS_Attend[attendanceSessions, attendanceRecords]
+            FS_Assess[assessments, assessmentResults]
+            FS_Assign[assignments, assignmentSubmissions]
+            FS_Achieve[studentAchievements]
+            FS_Notif[notifications, notificationPreferences]
+            FS_AICred[aiCredentials]
+            FS_AIModel[aiModelConfigs]
+            FS_Academic[institutions, departments, courses, semesters, subjects, subjectEnrollments, lecturerAssignments]
+            FS_Audit[auditLogs]
+        end
+        
+        subgraph PostgreSQL [PostgreSQL via Prisma - Relational]
+            PG_User[User]
+            PG_Membership[CollegeMembership]
+            PG_Academic[Institution, Department, Course, Semester, Subject]
+            PG_Enrollment[SubjectEnrollment, LecturerAssignment]
+            PG_Doc[Document, DocumentVersion, DocumentChunk, DocumentProcessingJob]
+            PG_Conv[Conversation, Message]
+            PG_Memory[UserMemory]
+            PG_Task[Task, PlannerEvent]
+            PG_Notif[Notification, NotificationPreference, NotificationConfig, NotificationDelivery]
+            PG_AICred[AICredential]
+            PG_AIModel[AIModelConfig]
+            PG_Research[ResearchNotebook, ResearchSource, ResearchNote]
+            PG_Proj[Project, ProjectMember, ProjectMentor, ProjectTask, ProjectMilestone, ProjectDiscussion]
+            PG_Attend[AttendanceSession, AttendanceRecord]
+            PG_Assess[Assessment, AssessmentResult]
+            PG_Assign[Assignment, AssignmentSubmission, Attachments]
+            PG_Achieve[StudentAchievement]
+            PG_Guardian[GuardianContact]
+            PG_Audit[AuditLog]
+            PG_Resource[SubjectResource]
+            PG_Study[StudyMaterial]
+            PG_Flash[FlashcardDeck, Flashcard, FlashcardReview]
+            PG_Mind[MindMap]
+            PG_Diag[Diagram]
+            PG_Quiz[Quiz, QuizAttempt]
+            PG_Image[GeneratedImage]
+        end
+        
+        FirestoreRules[Firestore Security Rules]
+        PrismaClient[Prisma Client]
+    end
+    
+    %% ===== EXTERNAL SERVICES =====
+    subgraph EXT [External Services]
+        direction TB
+        AI_Providers[AI Providers]
+        NVIDIA[NVIDIA Nemotron 3 Ultra]
+        OpenAI[OpenAI GPT-4o / Embeddings]
+        Google[Google Gemini 1.5 Pro]
+        Anthropic[Anthropic Claude 3.5 Sonnet]
+        Mistral[Mistral]
+        Groq[Groq]
+        OpenRouter[OpenRouter]
+        Together[Together AI]
+        
+        Storage[Firebase Cloud Storage]
+        Email[SMTP Server]
+        OCR[Tesseract.js OCR]
+        PDF_Libs[pdf-parse, pdfkit, mammoth]
+    end
+    
+    %% ===== AUTHENTICATION FLOW =====
+    AuthFlow[Authentication Flow]
+    
+    %% ===== DATA FLOWS =====
+    
+    %% User -> Frontend
+    User --> Browser
+    Browser --> Pages
+    Browser --> Middleware
+    
+    %% Middleware auth check
+    Middleware -->|Protected Routes| AuthProvider
+    Middleware -->|Public Routes| Pages
+    
+    %% AuthProvider -> Supabase
+    AuthProvider --> SupabaseClient
+    SupabaseClient -->|JWT / Session| AuthFlow
+    
+    %% Pages -> Components
+    Pages --> Components
+    Components --> TanStackQuery
+    
+    %% Frontend API Routes -> Backend
+    APIRoutes -->|Server-side Prisma| PG_User
+    APIRoutes -->|Server-side Prisma| PG_Doc
+    APIRoutes -->|Server-side Prisma| PG_Conv
+    APIRoutes -->|Server-side Prisma| PG_Academic
+    
+    %% Frontend -> Firebase Functions (Callable)
+    Components -->|HTTPS Callable| Functions
+    TanStackQuery -->|HTTPS Callable| Functions
+    SupabaseClient -->|Firebase Custom Token| AuthVerify
+    
+    %% Functions -> Auth Verification
+    Functions --> AuthVerify
+    AuthVerify -->|Valid UID| Functions
+    
+    %% Functions -> Firestore
+    UserFn --> FS_Users
+    DocFn --> FS_Docs
+    DocFn --> FS_Chunks
+    DocFn --> FS_Jobs
+    RagFn --> FS_Chunks
+    RagFn --> FS_Docs
+    AiFn --> FS_Conv
+    AiFn --> FS_Msgs
+    AiFn --> FS_AICred
+    AiFn --> FS_AIModel
+    StudyFn --> FS_Study
+    StudyFn --> FS_Flash
+    StudyFn --> FS_Quiz
+    StudyFn --> FS_Mind
+    StudyFn --> FS_Diag
+    PlannerFn --> FS_Conv
+    PlannerFn --> FS_Users
+    ResearchFn --> FS_Research
+    ProjectFn --> FS_Proj
+    AttendanceFn --> FS_Attend
+    AssessmentFn --> FS_Assess
+    AssignmentFn --> FS_Assign
+    AchievementFn --> FS_Achieve
+    
+    %% Functions -> PostgreSQL (via Prisma in web API routes)
+    APIRoutes --> PrismaClient
+    PrismaClient --> PG_User
+    PrismaClient --> PG_Membership
+    PrismaClient --> PG_Academic
+    PrismaClient --> PG_Enrollment
+    PrismaClient --> PG_Doc
+    PrismaClient --> PG_Conv
+    PrismaClient --> PG_Memory
+    PrismaClient --> PG_Task
+    PrismaClient --> PG_Notif
+    PrismaClient --> PG_AICred
+    PrismaClient --> PG_AIModel
+    PrismaClient --> PG_Research
+    PrismaClient --> PG_Proj
+    PrismaClient --> PG_Attend
+    PrismaClient --> PG_Assess
+    PrismaClient --> PG_Assign
+    PrismaClient --> PG_Achieve
+    PrismaClient --> PG_Guardian
+    PrismaClient --> PG_Audit
+    PrismaClient --> PG_Resource
+    PrismaClient --> PG_Study
+    PrismaClient --> PG_Flash
+    PrismaClient --> PG_Mind
+    PrismaClient --> PG_Diag
+    PrismaClient --> PG_Quiz
+    PrismaClient --> PG_Image
+    
+    %% Triggers -> Firestore
+    OnUserCreate --> FS_Users
+    OnDocUpload --> FS_Jobs
+    ScheduledCleanup --> FS_Notif
+    ScheduledAttendance --> FS_Notif
+    ScheduledAttendance --> FS_Attend
+    ScheduledAttendance --> FS_Users
+    
+    %% Functions -> External AI
+    AiFn --> AI_Providers
+    RagFn --> AI_Providers
+    StudyFn --> AI_Providers
+    PlannerFn --> AI_Providers
+    ResearchFn --> AI_Providers
+    
+    AI_Providers --> NVIDIA
+    AI_Providers --> OpenAI
+    AI_Providers --> Google
+    AI_Providers --> Anthropic
+    AI_Providers --> Mistral
+    AI_Providers --> Groq
+    AI_Providers --> OpenRouter
+    AI_Providers --> Together
+    
+    %% Document Processing Flow
+    DocFn -->|Signed Upload URL| Storage
+    Storage -->|File Uploaded| OnDocUpload
+    OnDocUpload --> FS_Jobs
+    FS_Jobs -->|Processing Pipeline| DocFn
+    DocFn -->|Extract Text| PDF_Libs
+    DocFn -->|OCR| OCR
+    DocFn -->|Chunk| FS_Chunks
+    DocFn -->|Embeddings| OpenAI
+    DocFn -->|Update Status| FS_Docs
+    
+    %% Functions -> Storage
+    DocFn -->|Signed Download URL| Storage
+    ProjectFn -->|Avatars/Resources| Storage
+    
+    %% Functions -> Email
+    AssessmentFn --> Email
+    AssignmentFn --> Email
+    AttendanceFn --> Email
+    ScheduledAttendance --> Email
+    
+    %% Firestore Rules
+    FS_Users -.->|Enforced by| FirestoreRules
+    FS_Docs -.->|Enforced by| FirestoreRules
+    FS_Chunks -.->|Enforced by| FirestoreRules
+    FS_Conv -.->|Enforced by| FirestoreRules
+    FS_Proj -.->|Enforced by| FirestoreRules
+    FS_Attend -.->|Enforced by| FirestoreRules
+    FS_Assess -.->|Enforced by| FirestoreRules
+    FS_Assign -.->|Enforced by| FirestoreRules
+    FS_Achieve -.->|Enforced by| FirestoreRules
+    FS_AICred -.->|Enforced by| FirestoreRules
+    FS_Research -.->|Enforced by| FirestoreRules
+    
+    %% Deployment
+    subgraph DEPLOY [Deployment]
+        FirebaseHosting[Firebase Hosting - Static Export]
+        FirebaseFunctions[Firebase Functions - Auto-scaling]
+        GitHubActions[GitHub Actions CI/CD]
+        SecretManager[Firebase Secret Manager]
+    end
+    
+    Pages -->|Build Output| FirebaseHosting
+    Index -->|Deploy| FirebaseFunctions
+    GitHubActions -->|CI/CD| FirebaseHosting
+    GitHubActions -->|CI/CD| FirebaseFunctions
+    SecretManager -->|Secrets| FirebaseFunctions
+```
+
+## Data Flow Descriptions
+
+### 1. Application Startup
+```
+User Opens Browser
+    → Next.js App Loads (Static Export from Firebase Hosting)
+    → Middleware Runs (Security Headers, Auth Check)
+    → AuthProvider Initializes (Supabase Client)
+    → TanStack Query Client Created
+    → Dashboard Page Renders (Server Component)
+```
+
+### 2. User Authentication (Login)
+```
+User Submits Login Form
+    → POST /api/auth/login (Next.js API Route)
+    → Prisma: Find User by Email (PostgreSQL)
+    → bcrypt: Compare Password Hash
+    → Create HMAC-Signed Session Cookie (alex_local_session)
+    → Return User Data + Set Cookie
+    → AuthProvider Refreshes (Supabase Auth State)
+    → Redirect to /dashboard
+```
+
+### 3. Authenticated API Request (Firebase Callable Function)
+```
+Frontend Component Calls Function (e.g., aiFunctions.sendMessage)
+    → Firebase Functions SDK Sends HTTPS Callable Request
+    → Firebase Verifies Auth Token (request.auth.uid)
+    → Function Executes (e.g., ai.ts:sendMessage)
+    → Function Accesses Firestore (db.collection)
+    → Function Calls AI Provider (OpenAI/NVIDIA/etc.)
+    → Function Writes Response to Firestore
+    → Function Returns Result to Frontend
+    → TanStack Query Updates Cache
+    → Component Re-renders with Data
+```
+
+### 4. Document Upload & Processing
+```
+User Uploads File (document-upload.tsx)
+    → POST /api/documents (API Route) OR documentFunctions.createDocument (Callable)
+    → Get Signed Upload URL from Firebase Storage
+    → Upload File Directly to Storage (Client → Storage)
+    → Confirm Upload (documentFunctions.confirmUpload)
+    → Storage Trigger (onDocumentUpload) Creates Processing Job
+    → Processing Pipeline (DocumentProcessingJob):
+        → Extract Text (pdf-parse, mammoth, Tesseract OCR)
+        → Chunk Text (chunker.ts)
+        → Generate Embeddings (OpenAI text-embedding-3-small)
+        → Store Chunks + Embeddings in Firestore (documentChunks)
+        → Update Document Status to READY
+```
+
+### 5. RAG Query (AI Chat with Documents)
+```
+User Sends Message (rag-chat.tsx)
+    → POST /api/rag/query (API Route) OR ragFunctions.ragQuery (Callable)
+    → Get User's AI Credentials (Decrypt API Key)
+    → Generate Query Embedding (OpenAI)
+    → Semantic Search in Firestore (documentChunks with embeddings)
+    → Build Context from Top-K Chunks
+    → Add Memories, Academic Context, Conversation History
+    → Call AI Provider (NVIDIA/OpenAI/Gemini/Anthropic)
+    → Stream/Return Answer with Citations
+    → Save Conversation + Messages to Firestore/PostgreSQL
+    → Return Response to Frontend
+```
+
+### 6. AI Credentials Management
+```
+User Adds AI API Key (ai-settings/page.tsx)
+    → POST /api/ai/credentials (API Route)
+    → Encrypt API Key (AES-256-GCM with ENCRYPTION_KEY)
+    → Hash Key (SHA-256 for Deduplication)
+    → Store in PostgreSQL (AICredential) + Firestore (aiCredentials)
+    → Set as Default if Requested
+```
+
+### 7. Attendance Marking (Lecturer)
+```
+Lecturer Opens Attendance Page
+    → GET /api/attendance/sessions (API Route)
+    → Lecturer Creates Session (attendanceFunctions.createSession)
+    → Validates Lecturer Assignment (lecturerAssignments)
+    → Creates Session + Pre-fills ABSENT Records for All Enrolled Students
+    → Lecturer Marks Attendance (attendanceFunctions.markAttendance)
+    → Batch Update Attendance Records
+    → Scheduled Function Checks Daily for Low Attendance (<35%)
+```
+
+### 8. Error Handling & Logging
+```
+Function Errors
+    → Caught in Try/Catch
+    → HttpsError Thrown (Standard Codes: unauthenticated, permission-denied, not-found, failed-precondition)
+    → Frontend Catches Error (TanStack Query onError)
+    → Toast Notification Shown (use-toast hook)
+    → Console Error Logged (Structured Logging in Functions)
+    → Optional: Sentry Integration (SENTRY_DSN)
+```
+
+### 9. Deployment Flow
+```
+Push to Main Branch
+    → GitHub Actions Triggered
+    → Install Dependencies (pnpm)
+    → Lint (ESLint)
+    → Typecheck (TypeScript)
+    → Test (Jest)
+    → Build (Next.js Static Export + Functions TSC)
+    → Deploy Preview Channel (Firebase Hosting)
+    → Manual Approval for Production
+    → Deploy to Production (Firebase Hosting + Functions)
+    → Secrets Injected from Secret Manager
+```

@@ -1,5 +1,5 @@
 #!/bin/bash
-# ALEX - Complete Setup & Run Script (SQLite + Demo Data)
+# ALEX - Complete Setup & Run Script (PostgreSQL + Demo Data)
 # Run this script to set up everything and start the dev server
 
 set -e  # Exit on error
@@ -19,37 +19,63 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Check if we're in the right directory
 if [ ! -f "package.json" ]; then
-    log_error "Run this script from E:\\Project_1\\alex directory"
+    log_error "Run this script from the alex directory"
     exit 1
 fi
 
+# Check prerequisites
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        log_error "$1 is not installed. Please install it first."
+        exit 1
+    fi
+}
+
+check_command node
+check_command pnpm
+check_command docker
+
 # 1. Install dependencies
 log_info "Installing dependencies..."
-npm install
+pnpm install
 
 # 2. Approve build scripts (for Prisma, etc.)
 log_info "Approving build scripts..."
-npm run approve-builds 2>/dev/null || true
+pnpm run approve-builds 2>/dev/null || true
 
-# 3. Switch to SQLite schema
-log_info "Switching to SQLite schema..."
-cp prisma/schema.sqlite.prisma prisma/schema.prisma
+# 3. Start PostgreSQL and Redis with Docker
+log_info "Starting PostgreSQL and Redis with Docker..."
+docker-compose up -d postgres redis
 
-# 4. Set SQLite database URL
-log_info "Configuring SQLite database..."
-echo 'DATABASE_URL="file:./dev.db"' > .env
+# Wait for PostgreSQL to be ready
+log_info "Waiting for PostgreSQL to be ready..."
+for i in {1..30}; do
+    if docker-compose exec -T postgres pg_isready -U postgres &> /dev/null; then
+        log_info "PostgreSQL is ready!"
+        break
+    fi
+    if [ $i -eq 30 ]; then
+        log_error "PostgreSQL failed to start in time"
+        exit 1
+    fi
+    sleep 1
+done
+
+# 4. Configure PostgreSQL database
+log_info "Configuring PostgreSQL database..."
+sed -i 's|^DATABASE_URL=.*|DATABASE_URL="postgresql://postgres:postgres@localhost:5432/alex?schema=public"|' .env.local
 
 # 5. Generate Prisma client
 log_info "Generating Prisma client..."
-npx prisma generate
+pnpm db:generate
 
-# 6. Push schema to SQLite
-log_info "Creating SQLite database..."
-npx prisma db push
+# 6. Push schema to PostgreSQL
+log_info "Creating PostgreSQL database..."
+pnpm db:push
 
 # 7. Seed demo data
 log_info "Seeding demo data (this may take a minute)..."
-npx tsx prisma/seed.sqlite.ts
+pnpm db:seed
 
 # 8. Start dev server
 log_info "Starting development server..."
@@ -61,4 +87,4 @@ echo "📋 Demo credentials will work after server starts"
 echo ""
 
 # Start dev server
-npm run dev
+pnpm dev

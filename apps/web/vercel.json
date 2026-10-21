@@ -1,0 +1,12 @@
+{
+  "buildCommand": "pnpm run build:web",
+  "devCommand": "pnpm run dev:web",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app-api/api/**/*.ts": {
+      "maxDuration": 60
+    }
+  }
+}

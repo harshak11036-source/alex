@@ -2,9 +2,10 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { User } from '@supabase/supabase-js'
 
-interface ExtendedUser extends User {
+interface ExtendedUser {
+  id: string
+  email: string | undefined
   firstName?: string
   lastName?: string
   avatarUrl?: string | null
@@ -15,6 +16,12 @@ interface ExtendedUser extends User {
     departmentId: string | null
     courseId: string | null
     semesterId: string | null
+  }
+  user_metadata?: {
+    firstName?: string
+    lastName?: string
+    role?: string
+    avatarUrl?: string | null
   }
 }
 
@@ -47,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refreshUser()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user: User | null } | null) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user: ExtendedUser | null } | null) => {
       setUser(session?.user as ExtendedUser | null)
     })
 

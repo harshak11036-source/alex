@@ -1,7 +1,5 @@
 packages:
   - apps/*
-  - functions
-  - packages/*
 
 hoistPattern:
   - '@prisma/client'

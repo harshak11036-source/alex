@@ -48,7 +48,7 @@ export default function DashboardPage() {
           })
           if (response.ok) {
             const data = await response.json()
-            // Merge Supabase user data with profile data
+            // Merge Firebase user data with profile data
             setUserWithRole({
               id: user.id,
               email: user.email || '',
@@ -63,7 +63,7 @@ export default function DashboardPage() {
           }
         }
 
-        // Fallback: use Supabase user metadata
+        // Fallback: use Firebase user metadata
         setUserWithRole({
           id: user.id,
           email: user.email || '',

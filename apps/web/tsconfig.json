@@ -20,9 +20,6 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@alex/shared-types/*": ["../../packages/shared-types/src/*"],
-      "@alex/shared-utils/*": ["../../packages/shared-utils/src/*"],
-      "@alex/validation-schemas/*": ["../../packages/validation-schemas/src/*"],
       "@prisma/client": ["../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma/client"]
     }
   },

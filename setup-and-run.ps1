@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    ALEX - Complete Setup & Run Script (SQLite + Demo Data) for Windows PowerShell
+    ALEX - Complete Setup & Run Script (PostgreSQL + Demo Data) for Windows PowerShell
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -14,37 +14,66 @@ function Log-Error { Write-Host "[ERROR] $1" -ForegroundColor Red }
 
 # Check if we're in the right directory
 if (-not (Test-Path "package.json")) {
-    Log-Error "Run this script from E:\Project_1\alex directory"
+    Log-Error "Run this script from the alex directory"
     exit 1
 }
 
+# Check prerequisites
+function Check-Command {
+    param($Command)
+    if (-not (Get-Command $Command -ErrorAction SilentlyContinue)) {
+        Log-Error "$Command is not installed. Please install it first."
+        exit 1
+    }
+}
+
+Check-Command node
+Check-Command pnpm
+Check-Command docker
+
 # 1. Install dependencies
 Log-Info "Installing dependencies..."
-npm install
+pnpm install
 
 # 2. Approve build scripts
 Log-Info "Approving build scripts..."
-try { npm run approve-builds } catch { }
+try { pnpm run approve-builds } catch { }
 
-# 3. Switch to SQLite schema
-Log-Info "Switching to SQLite schema..."
-Copy-Item "prisma\schema.sqlite.prisma" "prisma\schema.prisma" -Force
+# 3. Start PostgreSQL and Redis with Docker
+Log-Info "Starting PostgreSQL and Redis with Docker..."
+docker-compose up -d postgres redis
 
-# 4. Set SQLite database URL
-Log-Info "Configuring SQLite database..."
-'DATABASE_URL="file:./dev.db"' | Out-File -Encoding utf8 .env
+# Wait for PostgreSQL to be ready
+Log-Info "Waiting for PostgreSQL to be ready..."
+for ($i = 1; $i -le 30; $i++) {
+    try {
+        docker-compose exec -T postgres pg_isready -U postgres | Out-Null
+        Log-Info "PostgreSQL is ready!"
+        break
+    } catch {
+        if ($i -eq 30) {
+            Log-Error "PostgreSQL failed to start in time"
+            exit 1
+        }
+        Start-Sleep 1
+    }
+}
+
+# 4. Configure PostgreSQL database
+Log-Info "Configuring PostgreSQL database..."
+(Get-Content .env.example) -replace '^DATABASE_URL=.*', 'DATABASE_URL="postgresql://postgres:postgres@localhost:5432/alex?schema=public"' | Set-Content .env.local
 
 # 5. Generate Prisma client
 Log-Info "Generating Prisma client..."
-npx prisma generate
+pnpm db:generate
 
-# 6. Push schema to SQLite
-Log-Info "Creating SQLite database..."
-npx prisma db push
+# 6. Push schema to PostgreSQL
+Log-Info "Creating PostgreSQL database..."
+pnpm db:push
 
 # 7. Seed demo data
 Log-Info "Seeding demo data (this may take a minute)..."
-npx tsx prisma/seed.sqlite.ts
+pnpm db:seed
 
 # 8. Start dev server
 Log-Info "Starting development server..."
@@ -56,4 +85,4 @@ Write-Host "📋 Demo credentials will work after server starts" -ForegroundColo
 Write-Host ""
 
 # Start dev server
-npm run dev
+pnpm dev

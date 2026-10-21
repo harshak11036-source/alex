@@ -1,39 +1,68 @@
-import { createBrowserClient } from '@supabase/ssr'
+"use client"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+interface SupabaseUser {
+  id: string
+  email: string | null
+  user_metadata: {
+    firstName: string
+    lastName: string
+    role?: string
+    avatarUrl?: string | null
+  }
+}
 
-function createMockClient() {
+function createLocalAuth() {
   return {
-    auth: {
-      getUser: async () => ({ data: { user: null }, error: null }),
-      signInWithPassword: async () => ({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-      signUp: async () => ({ data: { user: null }, error: { message: 'Supabase not configured' } }),
-      signOut: async () => ({ error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    currentUser: null,
+    onAuthStateChanged: (callback: (user: SupabaseUser | null) => void) => {
+      callback(null)
+      return () => {}
+    },
+    signOut: async () => {},
+    signInWithPassword: async (credentials: { email: string; password: string }) => {
+      const r = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(credentials) })
+      const d = await r.json()
+      return { error: r.ok ? null : { message: d.error || 'Login failed' } }
+    },
+    signUp: async (payload: any) => {
+      const r = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: payload.email, password: payload.password, ...payload.options?.data }) })
+      const d = await r.json()
+      return { error: r.ok ? null : { message: d.error || 'Registration failed' } }
     },
   }
 }
 
-export function createClient() {
-  if (process.env.NEXT_PUBLIC_AUTH_MODE === 'local') {
-    return { auth: {
-      signInWithPassword: async (credentials: { email: string; password: string }) => { 
-        const r = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(credentials) }); 
-        const d = await r.json(); 
-        return { error: r.ok ? null : { message: d.error || 'Login failed' } } 
-      },
-      signUp: async (payload: any) => { 
-        const r = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: payload.email, password: payload.password, ...payload.options?.data }) }); 
-        const d = await r.json(); 
-        return { error: r.ok ? null : { message: d.error || 'Registration failed' } } 
-      },
-    } } as any
+function createMockAuth() {
+  return {
+    currentUser: null,
+    onAuthStateChanged: (callback: (user: SupabaseUser | null) => void) => {
+      callback(null)
+      return () => {}
+    },
+    signOut: async () => {},
+    signInWithPassword: async () => ({ error: { message: 'Auth not configured' } }),
+    signUp: async () => ({ error: { message: 'Auth not configured' } }),
   }
-  
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return createMockClient()
-  }
-  
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
+
+export function createClient() {
+  if (typeof window === 'undefined') {
+    return { auth: createMockAuth() } as any
+  }
+
+  const authMode = process.env.NEXT_PUBLIC_AUTH_MODE?.toLowerCase()
+
+  // Local auth mode - use API routes
+  if (authMode === 'local') {
+    return { auth: createLocalAuth() } as any
+  }
+
+  // Fallback to mock
+  return { auth: createMockAuth() } as any
+}
+
+// Empty exports for compatibility
+export const app = null
+export const auth = null
+export const storage = null
+export const db = null
