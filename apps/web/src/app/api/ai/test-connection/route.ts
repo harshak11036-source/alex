@@ -1,4 +1,4 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -217,3 +217,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Connection test failed', success: false }, { status: 500 })
   }
 }
+

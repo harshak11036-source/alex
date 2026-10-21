@@ -1,4 +1,4 @@
-import { DocumentType } from '@prisma/client'
+﻿import { DocumentType } from '@prisma/client'
 
 export interface ExtractedContent {
   text: string
@@ -182,3 +182,4 @@ export async function extractContent(
       return extractTextFromText(buffer)
   }
 }
+

@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createHash, randomBytes, scrypt } from 'crypto'
+﻿import { createCipheriv, createDecipheriv, createHash, randomBytes, scrypt } from 'crypto'
 import { promisify } from 'util'
 
 const scryptAsync = promisify(scrypt)
@@ -50,3 +50,4 @@ export function maskApiKey(key: string): string {
 export function generateKeyHash(key: string): string {
   return createHash('sha256').update(key).digest('hex')
 }
+

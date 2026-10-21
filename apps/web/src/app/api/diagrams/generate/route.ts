@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { generateDiagramFromTemplate, saveDiagram } from '@/lib/diagrams/generator'
 
@@ -78,3 +78,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to fetch diagrams' }, { status: 500 })
   }
 }
+

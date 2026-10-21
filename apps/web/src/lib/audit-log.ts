@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 
 export class AuditLogService {
   static async log(params: {
@@ -64,3 +64,4 @@ export class AuditLogService {
     })
   }
 }
+

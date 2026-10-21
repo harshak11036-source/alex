@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 import { DocumentStatus, DocumentType } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { extractContent } from '@/lib/document-processing/extractors'
@@ -244,3 +244,5 @@ async function downloadFile(bucket: string, path: string): Promise<Blob> {
   const { downloadFile } = await import('@/lib/storage/client')
   return downloadFile(bucket, path)
 }
+
+

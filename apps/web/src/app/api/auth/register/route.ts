@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 import { createLocalSession, LOCAL_AUTH_COOKIE, isLocalAuth } from '@/lib/local-auth'
 import { hash } from 'bcryptjs'
 import { NextResponse } from 'next/server'
@@ -10,3 +10,5 @@ export async function POST(request: Request) {
   const role = body.role === 'LECTURER' ? 'LECTURER' : 'STUDENT'; const user = await prisma.user.create({ data: { email, passwordHash: await hash(password, 12), firstName: body.first_name, lastName: body.last_name, role, isActive: true, emailVerified: new Date() } })
   const response = NextResponse.json({ ok: true }); response.cookies.set(LOCAL_AUTH_COOKIE, createLocalSession(user.id), { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 60 * 60 * 24 * 7 }); return response
 }
+
+

@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { NotificationService } from '@/lib/notifications'
 import { AuditLogService } from '@/lib/audit-log'
@@ -374,3 +374,4 @@ function formatReportMessage(student: any, report: any, period: string): string 
 
   return lines.join('\n')
 }
+

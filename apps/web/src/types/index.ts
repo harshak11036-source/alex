@@ -1,4 +1,4 @@
-import { UserRole, MembershipStatus, DocumentStatus, DocumentType, AttendanceStatus, AssessmentType, AssignmentStatus, AchievementCategory, NotificationCategory, ProjectStatus, ProjectRole, MemoryCategory, AIProviderType } from '@prisma/client'
+﻿import { UserRole, MembershipStatus, DocumentStatus, DocumentType, AttendanceStatus, AssessmentType, AssignmentStatus, AchievementCategory, NotificationCategory, ProjectStatus, ProjectRole, MemoryCategory, AIProviderType } from '@prisma/client'
 
 export type { UserRole, MembershipStatus, DocumentStatus, DocumentType, AttendanceStatus, AssessmentType, AssignmentStatus, AchievementCategory, NotificationCategory, ProjectStatus, ProjectRole, MemoryCategory, AIProviderType }
 
@@ -630,3 +630,4 @@ export interface ResearchNote {
   createdAt: Date
   updatedAt: Date
 }
+

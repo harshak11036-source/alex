@@ -1,4 +1,4 @@
-import { DocumentType } from '@prisma/client'
+﻿import { DocumentType } from '@prisma/client'
 
 export interface ChunkOptions {
   chunkSize?: number
@@ -153,3 +153,4 @@ export function chunkBySemanticUnits(
 ): DocumentChunk[] {
   return chunkContent(content, pages, options)
 }
+

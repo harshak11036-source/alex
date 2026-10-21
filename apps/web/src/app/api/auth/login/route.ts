@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 import { createLocalSession, LOCAL_AUTH_COOKIE, isLocalAuth } from '@/lib/local-auth'
 import { compare } from 'bcryptjs'
 import { NextResponse } from 'next/server'
@@ -14,3 +14,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Database unavailable. Start PostgreSQL and run the ALEX database setup first.' }, { status: 503 })
   }
 }
+
+

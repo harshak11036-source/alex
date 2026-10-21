@@ -1,4 +1,4 @@
-import crypto from 'node:crypto'
+﻿import crypto from 'node:crypto'
 
 export const LOCAL_AUTH_COOKIE = 'alex_local_session'
 function secret() { return process.env.NEXTAUTH_SECRET || 'alex-local-development-secret-change-me' }
@@ -16,3 +16,5 @@ export function getLocalUserId(token?: string | null) {
   try { const data = JSON.parse(Buffer.from(payload, 'base64url').toString()); return data.exp > Date.now() ? String(data.sub) : null } catch { return null }
 }
 export function isLocalAuth() { return (process.env.AUTH_MODE || 'local').toLowerCase() === 'local' }
+
+

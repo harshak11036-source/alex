@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
@@ -63,3 +63,4 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
   }
 }
+

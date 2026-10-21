@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 import { getUserEmbeddingProvider } from '@/lib/ai/embeddings'
 import { Prisma } from '@prisma/client'
 
@@ -237,3 +237,5 @@ export async function rerankResults(
 ): Promise<SearchResult[]> {
   return results
 }
+
+

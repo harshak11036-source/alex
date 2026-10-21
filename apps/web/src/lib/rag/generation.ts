@@ -1,5 +1,5 @@
-import { AICredential, AIProviderType as PrismaAIProviderType } from '@prisma/client'
-import { prisma } from '@/lib/prisma'
+﻿import { AICredential, AIProviderType as PrismaAIProviderType } from '@prisma/client'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { decrypt } from '@/lib/encryption'
 import { SearchResult } from './vector-search'
 import OpenAI from 'openai'
@@ -502,10 +502,10 @@ export class MockChatProvider {
     }
     
     if (context && context.length > 0) {
-      return `Based on your documents (mock response): ${context.slice(0, 300)}...\n\nNote: This is a mock response. Configure an AI provider in Settings → AI Settings for real AI responses.`
+      return `Based on your documents (mock response): ${context.slice(0, 300)}...\n\nNote: This is a mock response. Configure an AI provider in Settings â†’ AI Settings for real AI responses.`
     }
     
-    return `I'm running in mock mode for local development. To get real AI responses, configure an AI provider (NVIDIA Nemotron, OpenAI, Gemini, etc.) in Settings → AI Settings. Your question was: "${query}"`
+    return `I'm running in mock mode for local development. To get real AI responses, configure an AI provider (NVIDIA Nemotron, OpenAI, Gemini, etc.) in Settings â†’ AI Settings. Your question was: "${query}"`
   }
 }
 
@@ -561,3 +561,5 @@ export async function getUserChatProvider(
 
   return createChatProvider(cred.provider as AIProviderType, apiKey, modelConfig?.modelId)
 }
+
+

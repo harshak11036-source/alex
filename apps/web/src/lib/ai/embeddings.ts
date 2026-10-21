@@ -1,5 +1,5 @@
-import { AICredential, AIProviderType as PrismaAIProviderType } from '@prisma/client'
-import { prisma } from '@/lib/prisma'
+﻿import { AICredential, AIProviderType as PrismaAIProviderType } from '@prisma/client'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { decrypt } from '@/lib/encryption'
 
 // Extend for local development mock provider
@@ -220,3 +220,4 @@ export async function getUserEmbeddingProvider(
     credential: cred,
   }
 }
+

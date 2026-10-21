@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers'
-import { prisma } from '@/lib/prisma'
+﻿import { cookies } from 'next/headers'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { getLocalUserId } from '@/lib/local-auth'
 
 function isLocalAuth() {
@@ -54,3 +54,4 @@ export async function revokeSessionCookie(sessionCookie: string) {
 
 export const adminAuth = null
 export const adminDb = null
+

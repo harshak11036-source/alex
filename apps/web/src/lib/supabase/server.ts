@@ -1,4 +1,4 @@
-import { getCurrentUser } from './server-auth'
+﻿import { getCurrentUser } from './server-auth'
 
 interface SupabaseUser {
   id: string
@@ -47,3 +47,4 @@ export async function createServerClientSupabase() {
 }
 
 export { getCurrentUser }
+

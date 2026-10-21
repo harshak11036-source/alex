@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { decrypt } from '@/lib/encryption'
 
@@ -54,3 +54,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to get voice config' }, { status: 500 })
   }
 }
+

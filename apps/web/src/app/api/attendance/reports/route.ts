@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -269,3 +269,4 @@ async function generateInstitutionAttendanceReport(
     generatedAt: new Date().toISOString(),
   })
 }
+

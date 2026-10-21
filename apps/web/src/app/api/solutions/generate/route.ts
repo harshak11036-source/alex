@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { hybridSearch } from '@/lib/rag/vector-search'
 import { getUserChatProvider } from '@/lib/rag/generation'
@@ -174,3 +174,4 @@ RULES:
     return NextResponse.json({ error: 'Solution generation failed' }, { status: 500 })
   }
 }
+

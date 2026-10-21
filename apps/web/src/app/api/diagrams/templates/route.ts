@@ -1,4 +1,4 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { getDiagramTemplates } from '@/lib/diagrams/generator'
 
@@ -18,3 +18,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch templates' }, { status: 500 })
   }
 }
+

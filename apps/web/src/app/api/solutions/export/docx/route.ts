@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createServerClientSupabase } from '@/lib/supabase/server'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType } from 'docx'
 
@@ -343,3 +343,4 @@ function renderDOCXTable(headers: string[], rows: string[][]): any[] {
     }),
   ]
 }
+

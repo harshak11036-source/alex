@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
@@ -44,3 +44,4 @@ export async function POST() {
     return NextResponse.json({ error: 'Failed to mark all as read' }, { status: 500 })
   }
 }
+

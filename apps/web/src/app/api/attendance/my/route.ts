@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 
@@ -74,3 +74,4 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to get attendance' }, { status: 500 })
   }
 }
+

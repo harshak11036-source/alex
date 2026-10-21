@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+﻿import { PrismaClient } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('🌱 Starting database seed...')
+  console.log('ðŸŒ± Starting database seed...')
 
   // Clean up existing data (in reverse order of dependencies)
   await prisma.generatedImage.deleteMany()
@@ -60,7 +60,7 @@ async function main() {
   await prisma.user.deleteMany()
   await prisma.institution.deleteMany()
 
-  console.log('🧹 Cleaned existing data')
+  console.log('ðŸ§¹ Cleaned existing data')
 
   // Create institution
   const institution = await prisma.institution.create({
@@ -78,7 +78,7 @@ async function main() {
       },
     },
   })
-  console.log('🏫 Created institution:', institution.name)
+  console.log('ðŸ« Created institution:', institution.name)
 
   // Create departments
   const csDept = await prisma.department.create({
@@ -107,7 +107,7 @@ async function main() {
       description: 'Department of Mathematics and Statistics',
     },
   })
-  console.log('🏢 Created departments')
+  console.log('ðŸ¢ Created departments')
 
   // Create courses
   const csCourse = await prisma.course.create({
@@ -131,7 +131,7 @@ async function main() {
       description: 'Four-year undergraduate program in Electrical Engineering',
     },
   })
-  console.log('📚 Created courses')
+  console.log('ðŸ“š Created courses')
 
   // Create academic year
   const academicYear = await prisma.academicYear.create({
@@ -143,7 +143,7 @@ async function main() {
       isActive: true,
     },
   })
-  console.log('📅 Created academic year')
+  console.log('ðŸ“… Created academic year')
 
   // Create semesters
   const fallSemester = await prisma.semester.create({
@@ -171,7 +171,7 @@ async function main() {
       isActive: false,
     },
   })
-  console.log('📖 Created semesters')
+  console.log('ðŸ“– Created semesters')
 
   // Create subjects
   const subjects = await Promise.all([
@@ -267,7 +267,7 @@ async function main() {
       },
     }),
   ])
-  console.log('📝 Created subjects')
+  console.log('ðŸ“ Created subjects')
 
   // Create users with different roles
   const passwordHash = await hash('password123', 12)
@@ -378,7 +378,7 @@ async function main() {
       },
     }),
   ])
-  console.log('👥 Created users')
+  console.log('ðŸ‘¥ Created users')
 
   // Create college memberships
   await Promise.all([
@@ -454,7 +454,7 @@ async function main() {
       },
     })
   }
-  console.log('🎓 Created college memberships')
+  console.log('ðŸŽ“ Created college memberships')
 
   // Create lecturer assignments
   await Promise.all([
@@ -486,7 +486,7 @@ async function main() {
       },
     }),
   ])
-  console.log('👨‍🏫 Created lecturer assignments')
+  console.log('ðŸ‘¨â€ðŸ« Created lecturer assignments')
 
   // Create subject enrollments
   for (const student of students) {
@@ -502,7 +502,7 @@ async function main() {
       })
     }
   }
-  console.log('📋 Created subject enrollments')
+  console.log('ðŸ“‹ Created subject enrollments')
 
   // Create attendance sessions (past dates)
   const sessions = await Promise.all([
@@ -557,7 +557,7 @@ async function main() {
       },
     }),
   ])
-  console.log('📅 Created attendance sessions')
+  console.log('ðŸ“… Created attendance sessions')
 
   // Create attendance records
   const statuses: Array<'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED'> = ['PRESENT', 'PRESENT', 'PRESENT', 'LATE', 'ABSENT']
@@ -575,7 +575,7 @@ async function main() {
       })
     }
   }
-  console.log('✅ Created attendance records')
+  console.log('âœ… Created attendance records')
 
   // Create assessments
   const assessments = await Promise.all([
@@ -624,7 +624,7 @@ async function main() {
       },
     }),
   ])
-  console.log('📝 Created assessments')
+  console.log('ðŸ“ Created assessments')
 
   // Create assessment results
   const marks = [85, 92, 78, 65, 88]
@@ -655,7 +655,7 @@ async function main() {
       },
     })
   }
-  console.log('📊 Created assessment results')
+  console.log('ðŸ“Š Created assessment results')
 
   // Create assignments
   await prisma.assignment.create({
@@ -693,7 +693,7 @@ async function main() {
       createdBy: lecturer2.id,
     },
   })
-  console.log('📋 Created assignments')
+  console.log('ðŸ“‹ Created assignments')
 
   // Create assignment submissions
   for (const student of students.slice(0, 3)) {
@@ -708,7 +708,7 @@ async function main() {
       },
     })
   }
-  console.log('📤 Created assignment submissions')
+  console.log('ðŸ“¤ Created assignment submissions')
 
   // Create guardian contacts
   await Promise.all([
@@ -754,7 +754,7 @@ async function main() {
       },
     }),
   ])
-  console.log('👨‍👩‍👧‍👦 Created guardian contacts')
+  console.log('ðŸ‘¨â€ðŸ‘©â€ðŸ‘§â€ðŸ‘¦ Created guardian contacts')
 
   // Create notification configs
   await prisma.notificationConfig.create({
@@ -771,7 +771,7 @@ async function main() {
       isActive: false,
     },
   })
-  console.log('📧 Created notification configs')
+  console.log('ðŸ“§ Created notification configs')
 
   // Create notification preferences for students
   for (const student of students) {
@@ -786,7 +786,7 @@ async function main() {
       ],
     })
   }
-  console.log('🔔 Created notification preferences')
+  console.log('ðŸ”” Created notification preferences')
 
   // Create sample conversations and messages
   const conversation = await prisma.conversation.create({
@@ -810,7 +810,7 @@ async function main() {
       },
     },
   })
-  console.log('💬 Created sample conversation')
+  console.log('ðŸ’¬ Created sample conversation')
 
   // Create user memories
   await prisma.userMemory.createMany({
@@ -844,7 +844,7 @@ async function main() {
       },
     ],
   })
-  console.log('🧠 Created user memories')
+  console.log('ðŸ§  Created user memories')
 
   // Create planner events
   for (const student of students.slice(0, 2)) {
@@ -871,7 +871,7 @@ async function main() {
       ],
     })
   }
-  console.log('📅 Created planner events')
+  console.log('ðŸ“… Created planner events')
 
   // Create sample projects
   const project = await prisma.project.create({
@@ -903,7 +903,7 @@ async function main() {
       assignedBy: adminUser.id,
     },
   })
-  console.log('🚀 Created sample project')
+  console.log('ðŸš€ Created sample project')
 
   // Create research notebook
   const notebook = await prisma.researchNotebook.create({
@@ -926,7 +926,7 @@ async function main() {
       tags: ['literature-review', 'bst', 'performance'],
     },
   })
-  console.log('🔬 Created research notebook')
+  console.log('ðŸ”¬ Created research notebook')
 
   // Create sample flashcard deck
   const deck = await prisma.flashcardDeck.create({
@@ -948,7 +948,7 @@ async function main() {
       { deckId: deck.id, front: 'What is the worst-case time complexity of BST insertion?', back: 'O(n) - when tree becomes a linked list', difficulty: 0, interval: 0, repetitions: 0, easeFactor: 2.5, nextReview: new Date() },
     ],
   })
-  console.log('🃏 Created flashcard deck')
+  console.log('ðŸƒ Created flashcard deck')
 
   // Create sample study materials
   await prisma.studyMaterial.create({
@@ -962,7 +962,7 @@ async function main() {
       tags: ['midterm', 'review', 'data-structures'],
     },
   })
-  console.log('📄 Created study materials')
+  console.log('ðŸ“„ Created study materials')
 
   // Create sample achievements
   await prisma.studentAchievement.createMany({
@@ -995,7 +995,7 @@ async function main() {
       },
     ],
   })
-  console.log('🏆 Created achievements')
+  console.log('ðŸ† Created achievements')
 
   // Create sample diagrams
   await prisma.diagram.createMany({
@@ -1028,7 +1028,7 @@ async function main() {
       },
     ],
   })
-  console.log('📊 Created sample diagrams')
+  console.log('ðŸ“Š Created sample diagrams')
 
   // Create sample quizzes
   const quiz = await prisma.quiz.create({
@@ -1061,26 +1061,26 @@ async function main() {
       completedAt: new Date('2024-10-10T10:25:00'),
     },
   })
-  console.log('❓ Created sample quiz')
+  console.log('â“ Created sample quiz')
 
-  console.log('✨ Database seed completed successfully!')
-  console.log('\n📋 Demo Credentials:')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  console.log('👨‍💼 Admin:     admin@techuniversity.edu / password123')
-  console.log('👨‍🏫 Lecturer 1: prof.smith@techuniversity.edu / password123')
-  console.log('👨‍🏫 Lecturer 2: prof.jones@techuniversity.edu / password123')
-  console.log('👨‍🏫 Mentor:    mentor.wilson@techuniversity.edu / password123')
-  console.log('👨‍🎓 Student 1: alice.student@techuniversity.edu / password123')
-  console.log('👨‍🎓 Student 2: bob.student@techuniversity.edu / password123')
-  console.log('👨‍🎓 Student 3: carol.student@techuniversity.edu / password123')
-  console.log('👨‍🎓 Student 4: david.student@techuniversity.edu / password123')
-  console.log('👨‍🎓 Student 5: eve.student@techuniversity.edu / password123')
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+  console.log('âœ¨ Database seed completed successfully!')
+  console.log('\nðŸ“‹ Demo Credentials:')
+  console.log('â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”')
+  console.log('ðŸ‘¨â€ðŸ’¼ Admin:     admin@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸ« Lecturer 1: prof.smith@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸ« Lecturer 2: prof.jones@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸ« Mentor:    mentor.wilson@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸŽ“ Student 1: alice.student@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸŽ“ Student 2: bob.student@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸŽ“ Student 3: carol.student@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸŽ“ Student 4: david.student@techuniversity.edu / password123')
+  console.log('ðŸ‘¨â€ðŸŽ“ Student 5: eve.student@techuniversity.edu / password123')
+  console.log('â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”')
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seed failed:', e)
+    console.error('âŒ Seed failed:', e)
     process.exit(1)
   })
   .finally(async () => {

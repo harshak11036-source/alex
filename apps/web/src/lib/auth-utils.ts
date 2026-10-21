@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 
 export interface AuthContext {
@@ -239,3 +239,4 @@ export function rateLimitedResponse(message = 'Too many requests', resetTime?: n
   }
   return NextResponse.json({ success: false, error: message }, { status: 429, headers })
 }
+

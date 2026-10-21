@@ -1,4 +1,4 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import PDFDocument from 'pdfkit'
 
@@ -120,7 +120,7 @@ function renderPDFSection(pdfDoc: PDFKit.PDFDocument, section: any) {
     case 'list':
       if (Array.isArray(section.content)) {
         section.content.forEach((item: string) => {
-          pdfDoc.fontSize(11).font('Helvetica').text(`• ${item}`, { indent: 20 })
+          pdfDoc.fontSize(11).font('Helvetica').text(`â€¢ ${item}`, { indent: 20 })
         })
         pdfDoc.moveDown(0.4)
       }
@@ -196,3 +196,4 @@ function renderPDFTable(pdfDoc: PDFKit.PDFDocument, tableContent: string) {
   pdfDoc.y = y + 10
   pdfDoc.fillColor('black')
 }
+

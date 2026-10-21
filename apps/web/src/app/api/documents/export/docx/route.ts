@@ -1,4 +1,4 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType } from 'docx'
 
@@ -163,7 +163,7 @@ function renderDOCXSection(section: any): any[] {
         section.content.forEach((item: string) => {
           children.push(
             new Paragraph({
-              children: [new TextRun({ text: `• ${item}`, size: 22 })],
+              children: [new TextRun({ text: `â€¢ ${item}`, size: 22 })],
               indent: { left: 720 },
               spacing: { after: 80 },
             })
@@ -275,3 +275,4 @@ function renderDOCXTable(tableContent: string): any[] {
     }),
   ]
 }
+

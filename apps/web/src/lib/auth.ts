@@ -1,4 +1,4 @@
-import { createServerClientSupabase } from './supabase/server'
+﻿import { createServerClientSupabase } from './supabase/server'
 import { prisma } from './prisma'
 import { UserRole, MembershipStatus } from '@prisma/client'
 import { CollegeMembership } from '@prisma/client'
@@ -88,3 +88,4 @@ export function canManageSubject(user: { role: UserRole; memberships: CollegeMem
   const allowedRoles: UserRole[] = [UserRole.LECTURER, UserRole.ADMIN]
   return allowedRoles.includes(membership.role)
 }
+

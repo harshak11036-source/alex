@@ -1,4 +1,4 @@
-export interface NotificationMessage {
+﻿export interface NotificationMessage {
   provider: string
   config: Record<string, any>
   recipient: string
@@ -170,3 +170,4 @@ export class NotificationService {
     return { success: false, error: 'Webhook not configured' }
   }
 }
+

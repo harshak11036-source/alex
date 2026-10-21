@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 
 const CATEGORIES = [
@@ -82,3 +82,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to update preferences' }, { status: 500 })
   }
 }
+

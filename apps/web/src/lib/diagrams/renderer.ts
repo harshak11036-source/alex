@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+﻿import { execSync } from 'child_process'
 import { writeFileSync, mkdtempSync, rmSync } from 'fs'
 import { join } from 'path'
 import { tmpdir } from 'os'
@@ -152,3 +152,4 @@ export async function renderDiagramFromCode(
     height: heightMatch ? parseFloat(heightMatch[1]) : 600,
   }
 }
+

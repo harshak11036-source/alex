@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 interface SupabaseUser {
   id: string
@@ -66,3 +66,4 @@ export const app = null
 export const auth = null
 export const storage = null
 export const db = null
+

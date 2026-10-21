@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { processDocument, createDocumentRecord } from '@/lib/document-processing/pipeline'
 import { DocumentType } from '@prisma/client'
@@ -137,3 +137,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to list documents' }, { status: 500 })
   }
 }
+

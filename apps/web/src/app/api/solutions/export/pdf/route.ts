@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createServerClientSupabase } from '@/lib/supabase/server'
 import PDFDocument from 'pdfkit'
 
@@ -221,3 +221,4 @@ function renderPDFTable(pdfDoc: PDFKit.PDFDocument, headers: string[], rows: str
   pdfDoc.y = y + 10
   pdfDoc.fillColor('black')
 }
+

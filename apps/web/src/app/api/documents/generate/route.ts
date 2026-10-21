@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { getUserChatProvider } from '@/lib/rag/generation'
 import { hybridSearch } from '@/lib/rag/vector-search'
@@ -224,3 +224,4 @@ function parseSections(content: string): Array<{
 
   return sections
 }
+

@@ -1,4 +1,4 @@
-import { headers } from 'next/headers'
+﻿import { headers } from 'next/headers'
 
 interface RateLimitConfig {
   windowMs: number
@@ -95,3 +95,4 @@ if (typeof window === 'undefined') {
     }
   }, 5 * 60 * 1000) // Every 5 minutes
 }
+

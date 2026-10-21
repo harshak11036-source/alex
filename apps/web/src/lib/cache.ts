@@ -1,4 +1,4 @@
-import { createHash } from 'crypto'
+﻿import { createHash } from 'crypto'
 
 interface CacheEntry<T> {
   data: T
@@ -232,3 +232,4 @@ export function createCircuitBreaker(
     }
   }
 }
+

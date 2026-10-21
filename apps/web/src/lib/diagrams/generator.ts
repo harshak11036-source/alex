@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+﻿import { prisma } from '@/lib/prisma-edge-edge'
 import { Diagram } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 
@@ -304,3 +304,4 @@ export async function deleteDiagram(diagramId: string, userId: string): Promise<
     where: { id: diagramId, userId },
   })
 }
+

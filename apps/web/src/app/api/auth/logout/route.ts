@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+﻿import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
@@ -6,3 +6,4 @@ export async function GET() {
   response.cookies.set('alex_local_session', '', { maxAge: 0, path: '/' })
   return response
 }
+

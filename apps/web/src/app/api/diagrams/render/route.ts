@@ -1,5 +1,5 @@
-import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+﻿import { createServerClientSupabase } from '@/lib/supabase/server'
+import { prisma } from '@/lib/prisma-edge-edge'
 import { NextResponse } from 'next/server'
 import { renderDiagramFromCode } from '@/lib/diagrams/renderer'
 import { AuditLogService } from '@/lib/audit-log'
@@ -51,3 +51,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to render diagram' }, { status: 500 })
   }
 }
+

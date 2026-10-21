@@ -1,5 +1,5 @@
 import { createServerClientSupabase } from '@/lib/supabase/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma-edge'
 import { NextResponse } from 'next/server'
 
 export async function GET(
