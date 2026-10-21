@@ -1,5 +1,6 @@
 ﻿import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getLocalUserId } from '@/lib/local-auth'
 
 const PUBLIC_API_ROUTES = [
   '/api/auth/',
@@ -30,11 +31,18 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
   return response
 }
 
+function validateSessionCookie(request: NextRequest): boolean {
+  const cookie = request.cookies.get('alex_local_session')?.value
+  if (!cookie) return false
+  const userId = getLocalUserId(cookie)
+  return !!userId
+}
+
 export async function middleware(request: NextRequest) {
   const supabaseResponse = NextResponse.next({
     request,
   })
-  const user = request.cookies.get('alex_local_session')?.value ? { id: 'local' } : null
+  const user = validateSessionCookie(request)
 
   const isAuthPage = request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/register") ||

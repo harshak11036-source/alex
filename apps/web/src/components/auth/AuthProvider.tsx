@@ -37,22 +37,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ExtendedUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [initialized, setInitialized] = useState(false)
 
   const supabase = createClient()
 
   const refreshUser = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     setUser(user as ExtendedUser | null)
+    setLoading(false)
   }
 
   useEffect(() => {
+    // Initial fetch
     refreshUser()
 
+    // Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user: ExtendedUser | null } | null) => {
       setUser(session?.user as ExtendedUser | null)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [supabase])
 
   const signOut = async () => {
