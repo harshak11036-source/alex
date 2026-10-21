@@ -20,6 +20,9 @@ interface SupabaseSession {
 
 type AuthEvent = 'SIGNED_IN' | 'SIGNED_OUT' | 'TOKEN_REFRESHED' | 'INITIAL_SESSION' | 'USER_UPDATED'
 
+// Singleton auth instance
+let localAuthInstance: ReturnType<typeof createLocalAuth> | null = null
+
 function createLocalAuth() {
   let currentUser: SupabaseUser | null = null
   let currentSession: SupabaseSession | null = null
@@ -85,7 +88,7 @@ function createLocalAuth() {
       }
     },
 
-    signInWithPassword: async (credentials: { email: string; password: string }) => {
+    signInWithPassword: async (credentials: { email: string; password: string }, redirectUrl?: string) => {
       const r = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,16 +97,17 @@ function createLocalAuth() {
       })
       const data = await r.json()
       if (r.ok) {
-        const user = await fetchCurrentUser()
-        currentUser = user
-        currentSession = user ? { user } : null
-        notifySubscribers('SIGNED_IN', currentSession)
+        // Use full page reload to ensure cookie is sent with subsequent requests
+        // This avoids the client-side navigation cookie race condition
+        if (typeof window !== 'undefined') {
+          window.location.href = redirectUrl || '/dashboard'
+        }
         return { error: null }
       }
       return { error: { message: data.error || 'Login failed' } }
     },
 
-    signUp: async (payload: { email: string; password: string; options?: { data?: Record<string, string> } }) => {
+    signUp: async (payload: { email: string; password: string; options?: { data?: Record<string, string> } }, redirectUrl?: string) => {
       const r = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -116,20 +120,24 @@ function createLocalAuth() {
       })
       const data = await r.json()
       if (r.ok) {
-        const user = await fetchCurrentUser()
-        currentUser = user
-        currentSession = user ? { user } : null
-        notifySubscribers('SIGNED_IN', currentSession)
+        // Use full page reload to ensure cookie is sent with subsequent requests
+        if (typeof window !== 'undefined') {
+          window.location.href = redirectUrl || '/dashboard'
+        }
         return { error: null }
       }
       return { error: { message: data.error || 'Registration failed' } }
     },
 
     signOut: async () => {
-      await fetch('/api/auth/logout', { method: 'GET', credentials: 'include' })
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
       currentUser = null
       currentSession = null
       notifySubscribers('SIGNED_OUT', null)
+      // Full page reload to clear any cached state
+      if (typeof window !== 'undefined') {
+        window.location.href = '/'
+      }
       return { error: null }
     },
   }
@@ -155,13 +163,21 @@ function createMockAuth() {
   }
 }
 
+// Singleton getter
+function getLocalAuthInstance() {
+  if (!localAuthInstance) {
+    localAuthInstance = createLocalAuth()
+  }
+  return localAuthInstance
+}
+
 export function createClient() {
   if (typeof window === 'undefined') {
     return { auth: createMockAuth() } as any
   }
 
-  // Local auth mode - use API routes
-  return { auth: createLocalAuth() } as any
+  // Local auth mode - use API routes (singleton)
+  return { auth: getLocalAuthInstance() } as any
 }
 
 // Empty exports for compatibility

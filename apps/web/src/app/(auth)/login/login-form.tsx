@@ -44,7 +44,7 @@ export default function LoginForm() {
       const { error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
-      })
+      }, redirectTo)
 
       if (error) {
         toast({
@@ -59,8 +59,7 @@ export default function LoginForm() {
         title: "Welcome back!",
         description: "You have successfully signed in.",
       })
-      router.push(redirectTo)
-      router.refresh()
+      // Auth client handles full page redirect on success
     } catch (error) {
       toast({
         title: "Error",

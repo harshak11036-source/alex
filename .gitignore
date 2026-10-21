@@ -70,3 +70,4 @@ firebase-debug.*.log
 # Logs
 *.log
 logs/
+.vercel

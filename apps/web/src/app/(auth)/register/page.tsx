@@ -59,9 +59,8 @@ export default function RegisterPage() {
             last_name: data.lastName,
             role: data.role,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
+      }, '/dashboard')
 
       if (error) {
         toast({
@@ -74,9 +73,9 @@ export default function RegisterPage() {
 
       toast({
         title: "Account created!",
-        description: "Please check your email to verify your account.",
+        description: "Redirecting to dashboard...",
       })
-      router.push("/login")
+      // Auth client handles full page redirect on success
     } catch (error) {
       toast({
         title: "Error",
