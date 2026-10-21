@@ -408,3 +408,5 @@ docker run -p 3000:3000 --env-file .env.production alex:latest
 ## 📄 License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+#   V e r c e l   n a t i v e   b u i l d  
+ 
