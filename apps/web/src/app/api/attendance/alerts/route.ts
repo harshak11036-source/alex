@@ -117,7 +117,7 @@ async function getLowAttendanceStudentsInternal(
     if (sessions.length === 0) continue
 
     let present = 0
-    let total = sessions.length
+    const total = sessions.length
 
     sessions.forEach(session => {
       const record = session.records.find(r => r.userId === enrollment.userId)

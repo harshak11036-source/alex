@@ -3,13 +3,12 @@
 import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { X, Mic, Volume2, VolumeX, ChevronDown, Sparkles, Brain, Send, Maximize2, Home, FileText, BookOpen, Calendar, Bot, MessageSquare, RefreshCw, Trash2, Copy, Download, Settings } from "lucide-react"
+import { X, Mic, Volume2, VolumeX, ChevronDown, Sparkles, Brain, Send, Maximize2, MessageSquare, Trash2, Copy, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useToast } from "@/hooks/use-toast"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface AIAvatarProps {
@@ -61,10 +60,10 @@ const avatarComponents = {
 }
 
 const quickActions = [
-  { label: "Summarize current page", icon: FileText, action: "summarize" },
-  { label: "Explain this topic", icon: BookOpen, action: "explain" },
-  { label: "Create study notes", icon: Bot, action: "notes" },
-  { label: "Upcoming deadlines", icon: Calendar, action: "deadlines" },
+  { label: "Summarize current page", icon: MessageSquare, action: "summarize" },
+  { label: "Explain this topic", icon: Brain, action: "explain" },
+  { label: "Create study notes", icon: MessageSquare, action: "notes" },
+  { label: "Upcoming deadlines", icon: Brain, action: "deadlines" },
   { label: "Clear conversation", icon: Trash2, action: "clear", destructive: true },
 ]
 
@@ -168,7 +167,8 @@ export function AIAvatar({
   const handleSendMessage = async (content: string, contextOverride?: string) => {
     if (!content.trim()) return
 
-    const userMessage = { role: "user" as const, content, timestamp: Date.now() }
+    const timestamp = Date.now()
+    const userMessage = { role: "user" as const, content, timestamp }
     setMessages(prev => [...prev, userMessage])
     setInput("")
     setIsLoading(true)
@@ -236,9 +236,45 @@ export function AIAvatar({
   }
 
   const startListening = () => {
+    interface SpeechRecognitionEvent extends Event {
+      results: SpeechRecognitionResultList
+      resultIndex: number
+    }
+    
+    interface SpeechRecognitionResultList {
+      length: number
+      item(index: number): SpeechRecognitionResult
+      [index: number]: SpeechRecognitionResult
+    }
+    
+    interface SpeechRecognitionResult {
+      length: number
+      item(index: number): SpeechRecognitionAlternative
+      [index: number]: SpeechRecognitionAlternative
+      isFinal: boolean
+    }
+    
+    interface SpeechRecognitionAlternative {
+      transcript: string
+      confidence: number
+    }
+    
     const win = window as Window & { 
-      SpeechRecognition?: { new(): any }; 
-      webkitSpeechRecognition?: { new(): any } 
+      SpeechRecognition?: { new(): SpeechRecognition }; 
+      webkitSpeechRecognition?: { new(): SpeechRecognition } 
+    }
+    
+    interface SpeechRecognition extends EventTarget {
+      continuous: boolean
+      interimResults: boolean
+      lang: string
+      start(): void
+      stop(): void
+      abort(): void
+      onstart: ((this: SpeechRecognition, ev: Event) => void) | null
+      onend: ((this: SpeechRecognition, ev: Event) => void) | null
+      onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void) | null
+      onerror: ((this: SpeechRecognition, ev: Event) => void) | null
     }
     if (!("webkitSpeechRecognition" in win) && !("SpeechRecognition" in win)) {
       toast({ title: "Voice not supported", description: "Your browser doesn't support speech recognition", variant: "destructive" })
@@ -255,9 +291,9 @@ export function AIAvatar({
     recognition.onstart = () => setIsListening(true)
     recognition.onend = () => setIsListening(false)
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = Array.from(event.results)
-        .map((result: any) => result[0].transcript)
+        .map((result) => result[0].transcript)
         .join("")
 
       if (event.results[0].isFinal) {
@@ -351,7 +387,7 @@ export function AIAvatar({
         </div>
       </motion.div>
     ))
-  }, [messages, getCurrentAvatar])
+  }, [messages, getCurrentAvatar, copyMessage])
 
   // Responsive panel classes
   const isDesktop = !isMobile
@@ -395,8 +431,6 @@ export function AIAvatar({
     '/dashboard/settings': 'Settings and preferences',
     '/dashboard/ai-settings': 'AI Model and API configuration',
   }
-
-  const detectedContext = pageContext || pageContextMap[currentPath] || 'Dashboard home page'
 
   return (
     <>

@@ -42,7 +42,6 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/reset-password") ||
     request.nextUrl.pathname.startsWith("/auth/")
 
-  const isDashboardPage = request.nextUrl.pathname.startsWith("/dashboard")
   const isPublicPage = request.nextUrl.pathname === '/' || isAuthPage
   const isApiRoute = request.nextUrl.pathname.startsWith("/api/")
 
